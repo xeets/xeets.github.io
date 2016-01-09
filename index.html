@@ -1,14 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>xeets</title>
+	<title>the game</title>
 	<style type="text/css">
-	html, body {
-		background: black;
+	div {
+		transition: all 0.3s ease;
+		transition-property: height, width;
 	}
 	</style>
 </head>
 <body>
+	<button onclick="load('boot.js'),this.parentNode.removeChild(this)">boot</button>
 
+	<script type="text/javascript">
+		function load (src) {
+			return new Promise(function (res, rej) {
+				var script = document.createElement('script')
+				script.src = src
+				script.onload = res
+				document.getElementsByTagName('head')[0].appendChild(script)
+			})
+		}
+
+		function sha256 (str) {
+			var buffer = new TextEncoder("utf-8").encode(str)
+			return crypto.subtle.digest("SHA-256", buffer)
+				.then(function (hash) {
+				var binary = ''
+				var bytes = new Uint8Array(hash)
+				var len = bytes.byteLength
+				for (var i = 0; i < len; i++)
+					binary += String.fromCharCode(bytes[i])
+				return window.btoa(binary)
+			})
+		}
+
+		function schedule (x, s) {
+			return 200 * (x + Math.floor(Math.random() * (s || 0)))
+		}
+	</script>
 </body>
 </html>
